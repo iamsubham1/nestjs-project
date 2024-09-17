@@ -27,24 +27,32 @@ export class TodoService {
     }
   }
 
-  async createTodo(data: any): Promise<Todo> {
+  async createTodo(data: any, user: any): Promise<Todo> {
     try {
+      console.log('Checking if todo with the same title already exists...'); // Log checking for existing todo
       // Check if a todo with the same title already exists
       const existingTodo = await this.todoModel.findOne({ title: data.title }).exec();
 
       if (existingTodo) {
+        console.log('Todo with this title already exists:', data.title); // Log existing todo
         throw new BadRequestException('A todo with this title already exists');
       }
 
+      console.log('Creating a new todo...'); // Log creating new todo
       // Create and save the new todo if the title does not exist
       const newTodo = new this.todoModel({
         title: data.title,
         description: data.description,
         completed: false,
+        user: user._id
       });
 
-      return await newTodo.save();
+      const savedTodo = await newTodo.save();
+      console.log('New todo created successfully:', savedTodo); // Log successful creation
+
+      return savedTodo;
     } catch (error) {
+      console.error('Error creating todo:', error.message); // Log the error
       throw new InternalServerErrorException('Failed to create todo');
     }
   }
