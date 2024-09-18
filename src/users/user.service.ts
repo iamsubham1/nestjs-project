@@ -112,5 +112,5 @@ export class UserService {
     } catch (error) {
       throw new InternalServerErrorException('Failed to validate user');
     }
-  }
+  };
 }

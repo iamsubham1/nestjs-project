@@ -69,13 +69,16 @@ export class TodoService {
     }
   }
 
-  async deleteTodo(id: string): Promise<Todo> {
+  async deleteTodo(id: string): Promise<Todo | object> {
     try {
       const deletedTodo = await this.todoModel.findByIdAndDelete(id).exec();
       if (!deletedTodo) {
         throw new BadRequestException('Todo not found');
       }
-      return deletedTodo;
+      const message = {
+        message: 'todo deleted'
+      }
+      return message;;
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete todo');
     }
